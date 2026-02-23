@@ -1,4 +1,4 @@
-version: 0.1 
+version: 0.1
 component: build
 timeoutInSeconds: 600
 shell: bash
@@ -11,29 +11,26 @@ env:
     - BuildServiceDemoVersion
 
 steps:
-  - type: Command
-    name: "Install GraalVM Enterprise 22.x Native Image for Java22"
-    command:  yum -y install graalvm-22-jdk.x86_64;
-              ls /usr/lib64/graalvm/
+  # - type: Command
+  #   name: "Install GraalVM Enterprise 22.x Native Image for Java22"
+  #   command:  yum -y install graalvm-22-jdk.x86_64;
+  #             ls /usr/lib64/graalvm/
 
-  - type: Command
-    name: "Set PATH Variable"
-    command: export PATH=$JAVA_HOME/bin:$PATH
+  # - type: Command
+  #   name: "Set PATH Variable"
+  #   command: export PATH=$JAVA_HOME/bin:$PATH
 
   - type: Command
     name: "Docker Login"
-    command:  cd MtdrSpring;
-              oci os object get --bucket-name reacttodo-30489 --name deployment_config.tgz --file deployment_config.tgz;
-              tar -xzvf deployment_config.tgz;
-              source env.sh;
-              DOCKER_TOKEN=$(cat at.cfg)
-              docker login -u "$DOCKER_TOKEN/a00839075@tec.mx" --password-stdin phx.ocir.io
+    # command: cd MtdrSpring;
+    command:
+      oci os object get --bucket-name reacttodo-30489 --name deployment_config.tgz --file deployment_config.tgz;
+      tar -xzvf deployment_config.tgz;
+      cat at.cfg | docker login -u "$(cat at.cfg)/a00839075@tec.mx" --password-stdin phx.ocir.io
+      # source env.sh;
 
-  - type: Command
-    name: "Build"
-    command:  cd MtdrSpring;
-              source env.sh;
-              (cd backend;source build.sh)
-
-
-
+  # - type: Command
+  #   name: "Build"
+  #   command:  cd MtdrSpring;
+  #             source env.sh;
+  #             (cd backend;source build.sh)
